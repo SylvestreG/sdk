@@ -1,23 +1,18 @@
-#include "pistache/endpoint.h"
+#include <served/served.hpp>
 
-using namespace Pistache;
+int main(int argc, char const* argv[]) {
+  // Create a multiplexer for handling requests
+  served::multiplexer mux;
 
-class HelloHandler : public Http::Handler {
-public:
-  HTTP_PROTOTYPE(HelloHandler)
+  // GET /hello
+  mux.handle("/hello.m3u8")
+    .get([](served::response& res, const served::request& req) {
+      res << "Hello world!";
+    });
 
-  void onRequest(const Http::Request &request, Http::ResponseWriter response) {
-    response.send(Http::Code::Ok, "Hello, World");
-  }
-};
+  // Create the server and run with 10 handler threads.
+  served::net::server server("127.0.0.1", "8080", mux);
+  server.run(10);
 
-int main() {
-  Address addr(Ipv4::any(), Port(9080));
-
-  auto opts = Http::Endpoint::options().threads(1);
-  Http::Endpoint server(addr);
-  server.init(opts);
-  server.setHandler(std::make_shared<HelloHandler>());
-  server.serve();
-  return 0;
+  return (EXIT_SUCCESS);
 }
