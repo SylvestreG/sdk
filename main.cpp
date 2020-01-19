@@ -4,8 +4,12 @@
 #include <served/served.hpp>
 #include <restclient-cpp/restclient.h>
 
-constexpr char const* base = "https://test-streams.mux.dev/x36xhzz";
-constexpr char const* root = "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8";
+constexpr char const *base = "https://test-streams.mux.dev/x36xhzz";
+constexpr char const
+  *root = "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8";
+constexpr char const *red = "\033[0;31m";
+constexpr char const *magenta = "\033[0;35m";
+constexpr char const *reset = "\033[0m";
 
 int main(int argc, char const *argv[]) {
   // Create a multiplexer for handling requests
@@ -24,17 +28,17 @@ int main(int argc, char const *argv[]) {
         url = std::move(ss.str());
       }
 
-      std::cout << "[IN] " << url << std::endl;
+      std::cout << red << "[IN] " << magenta << url << reset << std::endl;
       std::chrono::system_clock timer;
 
       auto t1 = timer.now();
       RestClient::Response r = RestClient::get(url);
       auto t2 = timer.now();
 
-      std::cout << "[OUT] " << url << " ("
-        << std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1).count()
-        << "ms)"
-        << std::endl;
+      std::cout << red << "[OUT] " << magenta << url << " ("
+                << std::chrono::duration_cast<std::chrono::milliseconds>(
+                  t2 - t1).count()
+                << "ms)" << reset << std::endl;
       res << r.body;
     });
 
