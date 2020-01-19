@@ -5,6 +5,16 @@ set(CMAKE_CXX_STANDARD 17)
 
 include(ExternalProject)
 
+ExternalProject_Add(lyra-lib
+  GIT_REPOSITORY https://github.com/bfgroup/lyra
+  TIMEOUT 10
+  INSTALL_COMMAND ""
+  LOG_DOWNLOAD ON
+  LOG_CONFIGURE ON
+  LOG_BUILD ON)
+ExternalProject_Get_Property(lyra-lib source_dir)
+include_directories(${source_dir}/include/)
+
 ExternalProject_Add(served-lib
   GIT_REPOSITORY https://github.com/meltwater/served
   TIMEOUT 10
@@ -37,6 +47,7 @@ add_executable(sdk main.cpp)
 if (APPLE)
   add_dependencies(sdk served-lib)
 else(APPLE)
-  add_dependencies(sdk served-lib restclient-lib)
+  set(REST_DEP restclient-lib)
 endif(APPLE)
+add_dependencies(sdk served-lib lyra-lib ${REST_DEP})
 target_link_libraries(sdk served pthread restclient-cpp)
