@@ -11,6 +11,30 @@ constexpr char const *magenta = "\033[0;35m";
 constexpr char const *reset = "\033[0m";
 constexpr char const *usage = "usage: ./sdk -u url";
 
+//Helper to get information obout the get PURPOSE
+auto get_type = [](std::string const& uri) {
+  static bool last_is_ds{false};
+  std::size_t last_dot{uri.rfind('.')};
+
+  if (last_dot == std::string::npos || last_dot == uri.size())
+    return "[UNKNOWN] ";
+
+  std::string ext{uri.substr(last_dot, uri.size() - ++last_dot)};
+
+  if (ext == "m3u8") {
+    if (last_is_ds) {
+      last_is_ds = false;
+      std::cout << red << "[TRACK SWITCH]" << std::endl;
+    }
+
+    return "[MANIFEST] ";
+  }
+
+  last_is_ds = true;
+  return "[SEGMENT] ";
+};
+
+//HTTP Get Code
 auto handle_http_get = [](
   std::string const& root,
   std::string const& base,
@@ -18,22 +42,27 @@ auto handle_http_get = [](
   const served::request& req) {
   std::string url;
 
+  //first request, replace it by root url
   if (req.url().URI() == "/hello.m3u8") {
     url = root;
-  } else {
+  } else { //other request, just use it with the base URI
     std::stringstream ss;
     ss << base << req.url().URI();
     url = std::move(ss.str());
   }
 
-  std::cout << red << "[IN] " << magenta << url << reset << std::endl;
+  std::string type{get_type(req.url().URI())};
+  std::cout << red << "[IN]" << type << magenta << url
+            << reset << std::endl;
   std::chrono::system_clock timer;
 
+  //Perform GET on remote server
   auto t1 = timer.now();
   RestClient::Response r = RestClient::get(url);
   auto t2 = timer.now();
 
-  std::cout << red << "[OUT] " << magenta << url << " ("
+  std::cout << red << "[OUT]" << type << magenta << url
+            << " ("
             << std::chrono::duration_cast<std::chrono::milliseconds>(
               t2 - t1).count()
             << "ms)" << reset << std::endl;
