@@ -17,7 +17,6 @@ manifest::manifest(std::string const &data) {
 
   for (auto &line : _content) {
     if (!line.empty() && line[0] != '#') {
-      std::string url{line};
 
       if (line.rfind("../", 0) == 0) {
         uuid u;

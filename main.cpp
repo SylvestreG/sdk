@@ -6,7 +6,6 @@
 #include <lyra/lyra.hpp>
 #include <restclient-cpp/restclient.h>
 #include <served/served.hpp>
-#include <sstream>
 
 constexpr char const *red = "\033[0;31m";
 constexpr char const *magenta = "\033[0;35m";
@@ -15,7 +14,7 @@ constexpr char const *usage = "usage: ./sdk -u url";
 
 // Helper to get information obout the get PURPOSE
 auto get_type = [](std::string const &uri, bool &is_manifest) {
-  static bool last_is_ds{false};
+  static bool last_is_not_m3u{false};
   std::size_t last_dot{uri.rfind('.')};
 
   is_manifest = false;
@@ -26,8 +25,8 @@ auto get_type = [](std::string const &uri, bool &is_manifest) {
   std::string ext{uri.substr(last_dot, uri.size() - ++last_dot)};
 
   if (ext == "m3u8") {
-    if (last_is_ds) {
-      last_is_ds = false;
+    if (last_is_not_m3u) {
+      last_is_not_m3u = false;
       std::cout << red << "[TRACK SWITCH]" << std::endl;
     }
 
@@ -35,8 +34,15 @@ auto get_type = [](std::string const &uri, bool &is_manifest) {
     return "[MANIFEST] ";
   }
 
-  last_is_ds = true;
-  return "[SEGMENT] ";
+  last_is_not_m3u = true;
+
+  if (ext == "m3u8") {
+    return "[SUBTITLES] ";
+  } else if (ext == "ts") {
+    return "[SEGMENT] ";
+  }
+
+  return "[UNKNOWN] ";
 };
 
 // HTTP Get Code
