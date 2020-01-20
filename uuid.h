@@ -13,10 +13,10 @@ constexpr std::size_t uuid_str_len = 36;
 class uuid {
 public:
   uuid();
-  uuid(uuid const& uuid);
-  uuid const& operator=(uuid const& uuid);
+  uuid(uuid const &uuid);
+  uuid const &operator=(uuid const &uuid);
 
-  bool operator==(uuid const& uuid) const;
+  bool operator==(uuid const &uuid) const;
 
   std::string to_string() const;
 

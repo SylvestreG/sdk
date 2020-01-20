@@ -6,8 +6,8 @@
 #define SDK_CMAKE_BUILD_DEBUG_MANIFEST_H_
 
 #include <string>
-#include <vector>
 #include <unordered_map>
+#include <vector>
 
 // The attempt of this class is to parse manifest file
 // and replace all bits that annoy us like
@@ -16,15 +16,16 @@
 // replaced in the manifest by a relative address with an uuid
 // and we will keep an proxy uuid -> real addr
 class manifest {
- private:
+private:
   std::vector<std::string> _content;
 
- public:
-  //first string is uuid, bool is_relative_addr, second string is addr (relative or non)
+public:
+  // first string is uuid, bool is_relative_addr, second string is addr
+  // (relative or non)
   static std::unordered_map<std::string, std::pair<bool, std::string>> _proxy;
 
   manifest(std::string const &data);
   std::string get_manifest_processed_data();
 };
 
-#endif //SDK_CMAKE_BUILD_DEBUG_MANIFEST_H_
+#endif // SDK_CMAKE_BUILD_DEBUG_MANIFEST_H_

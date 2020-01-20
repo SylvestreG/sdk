@@ -27,11 +27,9 @@ uuid::uuid() {
   _time_hi_and_version |= (1 << 14);
 }
 
-uuid::uuid(uuid const& uuid) {
-  operator=(uuid);
-}
+uuid::uuid(uuid const &uuid) { operator=(uuid); }
 
-uuid const& uuid::operator=(uuid const& uuid) {
+uuid const &uuid::operator=(uuid const &uuid) {
   if (this != &uuid) {
     _time_low = uuid._time_low;
     _time_mid = uuid._time_mid;
@@ -44,13 +42,13 @@ uuid const& uuid::operator=(uuid const& uuid) {
   return *this;
 }
 
-#define DIFF_RETURN(a, b, field) \
-  do {                           \
-    if ((a).field != (b).field)  \
-      return false;              \
+#define DIFF_RETURN(a, b, field)                                               \
+  do {                                                                         \
+    if ((a).field != (b).field)                                                \
+      return false;                                                            \
   } while (0)
 
-bool uuid::operator==(uuid const& uuid) const {
+bool uuid::operator==(uuid const &uuid) const {
   int res;
 
   /* Deal with NULL or equal pointers. */

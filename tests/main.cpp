@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-int main(int argc, char* argv[]) {
+int main(int argc, char *argv[]) {
   // GTest initialization.
   testing::InitGoogleTest(&argc, argv);
 

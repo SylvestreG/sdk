@@ -46,7 +46,7 @@ auto get_type = [](std::string const &uri, bool &is_manifest) {
 };
 
 // HTTP Get Code
-auto handle_http_get = [](std::string const& root, std::string &base,
+auto handle_http_get = [](std::string const &root, std::string &base,
                           served::response &res, const served::request &req) {
   std::string url;
   std::string const &uri{req.url().URI()};
@@ -140,8 +140,8 @@ int main(int argc, char const *argv[]) {
   served::multiplexer mux;
 
   // Global http endpoint
-  mux.handle("/{addr}").get(std::bind(handle_http_get, std::ref(url), std::ref(url_base),
-                                      std::placeholders::_1,
+  mux.handle("/{addr}").get(std::bind(handle_http_get, std::ref(url),
+                                      std::ref(url_base), std::placeholders::_1,
                                       std::placeholders::_2));
 
   // Create the server and run with 10 handler threads.
