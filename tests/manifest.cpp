@@ -1,4 +1,4 @@
-#include "../manifest.h"
+#include "../src/manifest.h"
 #include <fstream>
 #include <gtest/gtest.h>
 #include <stack>

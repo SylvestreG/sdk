@@ -12,6 +12,6 @@ link_directories(${binary_dir}/lib)
 
 add_definitions(-DTEST_DIR="${CMAKE_SOURCE_DIR}/tests/")
 
-add_executable(ut main.cpp manifest.cpp ../manifest.cpp ../uuid.cpp)
+add_executable(ut main.cpp manifest.cpp ../src/manifest.cpp ../src/uuid.cpp)
 add_dependencies(ut googletest)
 target_link_libraries(ut gtest pthread)

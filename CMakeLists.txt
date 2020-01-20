@@ -43,7 +43,7 @@ else(APPLE)
   link_directories(${binary_dir})
 endif(APPLE)
 
-add_executable(sdk main.cpp manifest.cpp uuid.cpp)
+add_executable(sdk src/main.cpp src/manifest.cpp src/uuid.cpp)
 if (APPLE)
 else(APPLE)
   set(REST_DEP restclient-lib)
