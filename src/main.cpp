@@ -92,7 +92,7 @@ auto handle_http_get = [](std::string const &root, std::string &base,
     std::cout << red << "error: " << r.code << reset << "for" << uri
               << std::endl;
     served::response::stock_reply(404, res);
-    return ;
+    return;
   }
 
   std::cout
@@ -109,9 +109,11 @@ auto handle_http_get = [](std::string const &root, std::string &base,
 int main(int argc, char const *argv[]) {
   // Parsing args
   std::string url;
+  uint16_t port{8080};
 
-  auto cli =
-      lyra::cli_parser() | lyra::opt(url, "url")["-u"]["--url"]("m3u8 url");
+  auto cli = lyra::cli_parser() |
+             lyra::opt(url, "url")["-u"]["--url"]("m3u8 url") |
+             lyra::opt(port, "[port]")["-p"]["--port"]("server port");
 
   auto result = cli.parse({argc, argv});
   if (!result) {
@@ -150,7 +152,7 @@ int main(int argc, char const *argv[]) {
 
   // Create the server and run with 10 handler threads.
   try {
-    served::net::server server("127.0.0.1", "8080", mux);
+    served::net::server server("127.0.0.1", std::to_string(port), mux);
     server.run(10);
   } catch (boost::system::system_error const &se) {
     std::cerr << red << "error: " << reset << se.what() << std::endl;
