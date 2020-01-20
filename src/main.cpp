@@ -89,7 +89,10 @@ auto handle_http_get = [](std::string const &root, std::string &base,
   auto t2 = timer.now();
 
   if (r.code != 200) {
-    std::cout << red << "error: " << reset << uri << std::endl;
+    std::cout << red << "error: " << r.code << reset << "for" << uri
+              << std::endl;
+    served::response::stock_reply(404, res);
+    return ;
   }
 
   std::cout
@@ -127,7 +130,8 @@ int main(int argc, char const *argv[]) {
 
   // cut the url to get base address and complete addr
   std::size_t last_slash = url.rfind('/');
-  if (last_slash == std::string::npos) {
+  RestClient::Response r = RestClient::get(url);
+  if (last_slash == std::string::npos || r.code != 200) {
     std::cerr << red << "error: " << reset << "not valid url " << url
               << std::endl;
     std::cerr << usage << std::endl;
