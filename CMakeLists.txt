@@ -43,12 +43,15 @@ else(APPLE)
   link_directories(${binary_dir})
 endif(APPLE)
 
+find_package(Boost)
+
 add_executable(sdk src/main.cpp src/manifest.cpp src/uuid.cpp)
 if (APPLE)
 else(APPLE)
   set(REST_DEP restclient-lib)
 endif(APPLE)
 add_dependencies(sdk served-lib lyra-lib ${REST_DEP})
-target_link_libraries(sdk served pthread restclient-cpp)
+link_directories(${Boost_LIBRARY_DIRS})
+target_link_libraries(sdk served pthread restclient-cpp boost_system)
 
 add_subdirectory(tests)
