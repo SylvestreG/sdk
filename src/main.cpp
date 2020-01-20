@@ -51,7 +51,6 @@ auto handle_http_get = [](std::string const &root, std::string &base,
                           served::response &res, const served::request &req) {
   std::string url;
   std::string const &uri{req.url().URI()};
-  std::cout << uri << std::endl;
 
   // first request, replace it by root url
   if (uri == "/hello.m3u8") {
@@ -60,7 +59,6 @@ auto handle_http_get = [](std::string const &root, std::string &base,
     std::string key;
     if (uri.length() > uuid_str_len) {
       key = uri.substr(1, uuid_str_len);
-      std::cout << key;
     }
 
     auto it = manifest::_proxy.find(key);
