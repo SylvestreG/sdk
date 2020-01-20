@@ -46,7 +46,7 @@ auto get_type = [](std::string const &uri, bool &is_manifest) {
 };
 
 // HTTP Get Code
-auto handle_http_get = [](std::string const &root, std::string const &base,
+auto handle_http_get = [](std::string const& root, std::string &base,
                           served::response &res, const served::request &req) {
   std::string url;
   std::string const &uri{req.url().URI()};
@@ -59,6 +59,7 @@ auto handle_http_get = [](std::string const &root, std::string const &base,
     if (uri.length() > uuid_str_len) {
       key = uri.substr(1, uuid_str_len);
     }
+
     auto it = manifest::_proxy.find(key);
     // normal request
     if (it == manifest::_proxy.end()) {
@@ -67,7 +68,12 @@ auto handle_http_get = [](std::string const &root, std::string const &base,
       url = std::move(ss.str());
     } else { // rewritten request
       std::stringstream ss;
-      ss << base << "/" << it->second;
+      if (!it->second.first) // non-relative
+        ss << base << "/" << it->second.second;
+      else { // relative, update root
+        ss << it->second.second;
+        base = it->second.second.substr(0, it->second.second.rfind('/'));
+      }
       url = std::move(ss.str());
     }
   }
@@ -134,7 +140,7 @@ int main(int argc, char const *argv[]) {
   served::multiplexer mux;
 
   // Global http endpoint
-  mux.handle("/{addr}").get(std::bind(handle_http_get, url, url_base,
+  mux.handle("/{addr}").get(std::bind(handle_http_get, std::ref(url), std::ref(url_base),
                                       std::placeholders::_1,
                                       std::placeholders::_2));
 

@@ -20,7 +20,8 @@ class manifest {
   std::vector<std::string> _content;
 
  public:
-  static std::unordered_map<std::string, std::string> _proxy;
+  //first string is uuid, bool is_relative_addr, second string is addr (relative or non)
+  static std::unordered_map<std::string, std::pair<bool, std::string>> _proxy;
 
   manifest(std::string const &data);
   std::string get_manifest_processed_data();

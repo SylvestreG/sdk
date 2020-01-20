@@ -1,10 +1,10 @@
 #include "manifest.h"
 #include "uuid.h"
+#include <iomanip>
 #include <iostream>
 #include <numeric>
-#include <sstream>
 
-std::unordered_map<std::string, std::string> manifest::_proxy;
+std::unordered_map<std::string, std::pair<bool, std::string>> manifest::_proxy;
 
 manifest::manifest(std::string const &data) {
 
@@ -20,7 +20,15 @@ manifest::manifest(std::string const &data) {
 
       if (line.rfind("../", 0) == 0) {
         uuid u;
-        manifest::_proxy[u.to_string()] = line;
+        manifest::_proxy[u.to_string()] = {false, line};
+        line = u.to_string();
+      } else if (line.rfind("http://", 0) == 0) {
+        uuid u;
+        manifest::_proxy[u.to_string()] = {true, line};
+        line = u.to_string();
+      } else if (line.rfind("https://", 0) == 0) {
+        uuid u;
+        manifest::_proxy[u.to_string()] = {true, line};
         line = u.to_string();
       }
     }
@@ -32,6 +40,6 @@ std::string manifest::get_manifest_processed_data() {
   return std::accumulate(
       _content.begin(), _content.end(), std::string(),
       [](const std::string &a, const std::string &b) -> std::string {
-        return a + b + "\n" ;
+        return a + b + "\n";
       });
 }
