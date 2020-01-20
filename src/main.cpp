@@ -22,7 +22,8 @@ auto get_type = [](std::string const &uri, bool &is_manifest) {
   if (last_dot == std::string::npos || last_dot == uri.size())
     return "[UNKNOWN] ";
 
-  std::string ext{uri.substr(last_dot, uri.size() - ++last_dot)};
+  last_dot++;
+  std::string ext{uri.substr(last_dot, uri.size() - last_dot)};
 
   if (ext == "m3u8") {
     if (last_is_not_m3u) {

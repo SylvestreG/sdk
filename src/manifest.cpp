@@ -3,6 +3,7 @@
 #include <iomanip>
 #include <iostream>
 #include <numeric>
+#include <sstream>
 
 std::unordered_map<std::string, std::pair<bool, std::string>> manifest::_proxy;
 
@@ -17,19 +18,22 @@ manifest::manifest(std::string const &data) {
 
   for (auto &line : _content) {
     if (!line.empty() && line[0] != '#') {
-
+      auto ext_pos = line.rfind('.');
+      std::string ext;
+      if (ext_pos != std::string::npos)
+        ext = line.substr(ext_pos, line.size() - ext_pos);
       if (line.rfind("../", 0) == 0) {
         uuid u;
         manifest::_proxy[u.to_string()] = {false, line};
-        line = u.to_string();
+        line = u.to_string().append(ext);
       } else if (line.rfind("http://", 0) == 0) {
         uuid u;
         manifest::_proxy[u.to_string()] = {true, line};
-        line = u.to_string();
+        line = u.to_string().append(ext);
       } else if (line.rfind("https://", 0) == 0) {
         uuid u;
         manifest::_proxy[u.to_string()] = {true, line};
-        line = u.to_string();
+        line = u.to_string().append(ext);
       }
     }
   }
