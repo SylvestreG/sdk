@@ -5,7 +5,7 @@ SDK
 
 ## Overview
 
-hls is a c++ HLS proxy
+sdk is a c++ HLS proxy
 
 ## Installation
 
