@@ -12,7 +12,7 @@ constexpr char const *magenta = "\033[0;35m";
 constexpr char const *reset = "\033[0m";
 constexpr char const *usage = "usage: ./sdk -u url";
 
-// Helper to get information obout the get PURPOSE
+// Helper to get information about the get PURPOSE
 auto get_type = [](std::string const &uri, bool &is_manifest) {
   static bool last_is_not_m3u{false};
   std::size_t last_dot{uri.rfind('.')};
@@ -112,6 +112,7 @@ int main(int argc, char const *argv[]) {
   std::string url;
   uint16_t port{8080};
 
+  //option parser
   auto cli = lyra::cli_parser() |
              lyra::opt(url, "url")["-u"]["--url"]("m3u8 url") |
              lyra::opt(port, "[port]")["-p"]["--port"]("server port");
